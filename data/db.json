@@ -10,7 +10,13 @@
       "id": 2,
       "title": "Make marketing email",
       "details": "Lorem ipsum",
-      "complete": true
+      "complete": false
+    },
+    {
+      "title": "do homework",
+      "details": "a lot!",
+      "complete": false,
+      "id": 3
     }
   ]
 }
