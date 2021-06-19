@@ -18,6 +18,8 @@
 </template>
 
 <script>
+import { projectFirestore } from '../../firebase/config'
+
 export default {
   props: ['project'],
   data() {
@@ -28,18 +30,18 @@ export default {
   },
   methods:{
       deleteProject(){
-          fetch(this.uri, {method: 'DELETE'})
-            .then(() => this.$emit('delete', this.project.id))
-            .catch((err) => console.log(err))
+          const del = async () => {
+            projectFirestore.collection('projects').doc(this.project.id).delete()
+          }
+          del()
+          this.$emit('delete', this.project.id)
       },
       toggleComplete(){
-          fetch(this.uri, {
-              method: 'PATCH',
-              headers: {'Content-Type': 'application/json'},
-              body: JSON.stringify({complete: !this.project.complete})
-          }).then(() => {
-              this.project.complete = !this.project.complete
-          }).catch(err => console.log(err))
+          const update = async () => {
+            projectFirestore.collection('projects').doc(this.project.id).update({complete: !this.project.complete})
+          }
+          update()
+          this.project.complete = !this.project.complete
       }
   }
   

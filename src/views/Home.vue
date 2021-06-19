@@ -12,6 +12,7 @@
 <script>
 import SingleProject from '../components/SingleProject.vue'
 import FilterNav from '../components/FilterNav.vue'
+import { projectFirestore } from '../../firebase/config'
 
 export default {
   name: 'Home',
@@ -23,10 +24,14 @@ export default {
     }
   },
   mounted(){
-    fetch('http://localhost:3000/projects')
-      .then(res => res.json())
-      .then(data => this.projects = data)
-      .catch(err => console.log(err.message))
+
+    const load = async () => {
+      var res = await projectFirestore.collection('projects').get()
+      this.projects = res.docs.map((doc) => {
+        return {...doc.data(), id: doc.id}
+      })
+    }
+    load()
   },
   methods: {
     handleDelete(id){

@@ -9,6 +9,8 @@
 </template>
 
 <script>
+import {projectFirestore} from '../../firebase/config'
+
 export default {
     props: ['id'],
     data(){
@@ -19,22 +21,22 @@ export default {
         }
     },
     mounted(){
-        fetch(this.uri)
-            .then(res => res.json())
-            .then(data => {
-                this.title = data.title
-                this.details = data.details
-            }).catch(err=>console.log(err))
+        const get = async () => {
+            var project = await projectFirestore.collection('projects').doc(this.id).get()
+            project = project.data()
+            this.title = project.title
+            this.details = project.details
+        }
+        get()
     },
     methods: {
         handleSubmit(){
-            fetch(this.uri, {
-                method: 'PATCH',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({title: this.title, details: this.details})
-            }).then(() => {
-              this.$router.push('/')
-            }).catch(err => console.log(err))
+            const update = async () => {
+                await projectFirestore.collection('projects').doc(this.id).update({title: this.title, details: this.details})
+                this.$router.push('/')
+            }
+            update()
+            
         }
     }
 

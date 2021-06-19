@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import { projectFirestore } from '../../firebase/config'
 export default {
     data(){
         return {
@@ -23,15 +24,14 @@ export default {
                 details: this.details,
                 complete: false 
             }
-
-            fetch('http://localhost:3000/projects', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(project)
-            }).then(() => {
-                this.$router.push('/')
-            })
-        }
+            console.log(this.title)
+            console.log(project)
+            const add = async () => {
+              projectFirestore.collection('projects').add(project)
+              this.$router.push('/')
+            }
+            add()            
+        } 
     }
 }
 </script>
